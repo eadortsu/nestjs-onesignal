@@ -1,6 +1,6 @@
 # NestJS OneSignal Module
 
-[![npm version](https://badge.fury.io/js/nestjs-onesignal.svg)](https://badge.fury.io/js/nestjs-onesignal)
+[![npm version](https://badge.fury.io/js/onesignal-nestjs.svg)](https://badge.fury.io/js/onesignal-nestjs)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Test Coverage](https://img.shields.io/badge/coverage-94.11%25-brightgreen)](https://github.com/eadortsu/nestjs-onesignal)
 
@@ -30,7 +30,7 @@ A comprehensive, type-safe OneSignal integration module for NestJS applications.
 ## 🚀 Installation
 
 ```bash
-npm install nestjs-onesignal @nestjs/axios axios
+npm install onesignal-nestjs @nestjs/axios axios
 ```
 
 ### Peer Dependencies
@@ -63,7 +63,7 @@ Import and configure the module in your `app.module.ts`:
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { OneSignalModule } from 'nestjs-onesignal';
+import { OneSignalModule } from 'onesignal-nestjs';
 
 @Module({
   imports: [
@@ -93,7 +93,7 @@ interface OneSignalModuleOptions {
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { OneSignalService } from 'nestjs-onesignal';
+import { OneSignalService } from 'onesignal-nestjs';
 
 @Injectable()
 export class NotificationService {
