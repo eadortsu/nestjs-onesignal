@@ -33,13 +33,6 @@ A comprehensive, type-safe OneSignal integration module for NestJS applications.
 npm install onesignal-nestjs @nestjs/axios axios
 ```
 
-### Peer Dependencies
-
-This module requires the following peer dependencies (automatically installed):
-- `@nestjs/axios` - HTTP client for NestJS
-- `axios` - HTTP client library
-- `rxjs` - Reactive programming library
-
 ## 📋 Requirements
 
 - Node.js >= 18.0.0
