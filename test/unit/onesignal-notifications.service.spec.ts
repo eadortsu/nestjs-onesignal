@@ -77,6 +77,33 @@ describe('OneSignalNotificationsService', () => {
 
             await expect(service.sendPushNotification(input)).rejects.toThrow('Contents are required for push notifications');
         });
+
+        it('should send push notification with simplified onesignal_id and external_id', async () => {
+            const mockResponse = { id: '123', recipients: 100 };
+            (httpService.post as jest.Mock).mockReturnValue(of({ data: mockResponse }));
+
+            const input: CreatePushNotificationInput = {
+                contents: { en: 'Test message' },
+                onesignal_id: 'user-123',
+                external_id: ['ext-456', 'ext-789'],
+            };
+
+            const result = await service.sendPushNotification(input);
+            expect(result).toEqual(mockResponse);
+            expect(httpService.post).toHaveBeenCalledWith(
+                'https://api.onesignal.com/notifications?c=push',
+                {
+                    contents: { en: 'Test message' },
+                    app_id: mockOptions.appId,
+                    include_aliases: {
+                        onesignal_id: ['user-123'],
+                        external_id: ['ext-456', 'ext-789'],
+                    },
+                    target_channel: 'push',
+                },
+                expect.any(Object)
+            );
+        });
     });
 
     describe('sendEmailNotification', () => {

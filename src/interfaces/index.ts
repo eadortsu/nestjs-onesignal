@@ -237,84 +237,189 @@ export interface ViewUserIdentityResponse {
 // =================================================================
 
 /**
- * @interface CreatePushNotificationInput
- * @description Input for creating and sending a push notification.
+ * @description Simplified input for creating and sending a push notification.
  * @see https://documentation.onesignal.com/reference/create-notification
  */
-export interface CreatePushNotificationInput extends Audience, Scheduling {
-    target_channel?: 'push';
+export type CreatePushNotificationInput = Scheduling & {
+    /** The main message body with language-specific values. */
     contents: {
         en: string; // Default language content
         [lang: string]: string; // Additional languages
     };
+    /** The message title with language-specific values. */
     headings?: {
         en: string; // Default language content
         [lang: string]: string; // Additional languages
     };
-    subtitle?:{
+    /** iOS only. The subtitle with language-specific values. */
+    subtitle?: {
         en: string; // Default language content
         [lang: string]: string; // Additional languages
     };
+    /** An internal name you set to help organize and track messages. */
     name?: string;
+    /** The template ID in UUID v4 format set for the message if applicable. */
     template_id?: string;
+    /** Include user or context-specific data in a message. */
     custom_data?: Record<string, any>;
+    /** iOS attachments. */
     ios_attachments?: {
         id: string;
     };
+    /** URL of the image for Android notifications. */
     big_picture?: string;
+    /** URL of the image for Huawei Android notifications. */
     huawei_big_picture?: string;
+    /** URL of the image for Amazon Android notifications. */
     adm_big_picture?: string;
+    /** URL of the image for Chrome web notifications. */
     chrome_web_image?: string;
+    /** Local name of the small icon for Android notifications. */
     small_icon?: string;
+    /** Local name of the small icon for Huawei Android notifications. */
     huawei_small_icon?: string;
+    /** Local name of the small icon for Amazon Android notifications. */
     adm_small_icon?: string;
+    /** Local name or URL of the large icon for Android notifications. */
     large_icon?: string;
+    /** Local name or URL of the large icon for Huawei Android notifications. */
     huawei_large_icon?: string;
+    /** Local name or URL of the large icon for Amazon Android notifications. */
     adm_large_icon?: string;
+    /** URL of the icon for Chrome web notifications. */
     chrome_web_icon?: string;
+    /** URL of the icon for Firefox web notifications. */
     firefox_icon?: string;
+    /** URL of the icon for Android notification tray for Chrome web. */
     chrome_web_badge?: string;
+    /** UUID of the Android notification channel category. */
     android_channel_id?: string;
+    /** UUID of the existing Android notification channel category. */
     existing_android_channel_id?: string;
+    /** UUID of the Huawei notification channel category. */
+    huawei_channel_id?: string;
+    /** UUID of the existing Huawei notification channel category. */
+    huawei_existing_channel_id?: string;
+    /** Category for Huawei notifications. */
     huawei_category?: 'MARKETING' | 'IM' | 'VOIP' | 'SUBSCRIPTION' | 'TRAVEL' | 'HEALTH' | 'WORK' | 'ACCOUNT' | 'EXPRESS' | 'FINANCE' | 'DEVICE_REMINDER' | 'MAIL';
-    huawei_msg_type?: string;
+    /** Type of notification for Huawei devices. */
+    huawei_msg_type?: 'message' | 'data';
+    /** Tag for associating messages in Huawei batch delivery. */
     huawei_bi_tag?: string;
-    priority?: number;
+    /** Priority of the notification. */
+    priority?: 5 | 10;
+    /** iOS interruption level. */
     ios_interruption_level?: 'passive' | 'active' | 'time-sensitive' | 'critical';
+    /** Local name of the custom sound file for iOS. */
     ios_sound?: string;
+    /** Badge type for iOS. */
     ios_badgeType?: 'None' | 'SetTo' | 'Increase';
+    /** Badge count for iOS. */
     ios_badgeCount?: number;
+    /** ARGB Hex color for Android small icon background. */
     android_accent_color?: string;
+    /** ARGB Hex color for Huawei small icon background. */
     huawei_accent_color?: string;
+    /** URL that opens in the browser when interacted with. */
     url?: string;
+    /** URL for mobile platforms. */
     app_url?: string;
+    /** URL for web platforms. */
     web_url?: string;
+    /** Direct the notification to a specific user experience. */
     target_content_identifier?: string;
+    /** Action buttons for Android and iOS. */
     buttons?: { id: string; text: string; icon?: string; }[];
+    /** Action buttons for web push. */
     web_buttons?: { id: string; text: string; url: string; }[];
+    /** ID to group notifications on Apple devices. */
     thread_id?: string;
+    /** Relevance score for iOS notifications. */
     ios_relevance_score?: number;
+    /** ID to group notifications on Android devices. */
     android_group?: string;
+    /** ID to group notifications on Amazon Android devices. */
     adm_group?: string;
+    /** Duration in seconds for which the notification remains valid. */
     ttl?: number;
+    /** ID that replaces older notifications with newer ones. */
     collapse_id?: string;
+    /** ID that prevents replacement for web push. */
     web_push_topic?: string;
+    /** Custom data bundle within the notification. */
     data?: Record<string, any>;
+    /** Allows sending data/background notifications. */
     content_available?: boolean;
+    /** Category for iOS notifications. */
     ios_category?: string;
+    /** Override for APNs push type. */
     apns_push_type_override?: string;
+    /** Target iOS devices only. */
     isIos?: boolean;
+    /** Target Android devices only. */
     isAndroid?: boolean;
+    /** Target Huawei devices only. */
     isHuawei?: boolean;
+    /** Target web push only. */
     isAnyWeb?: boolean;
+    /** Target Chrome only. */
     isChromeWeb?: boolean;
+    /** Target Firefox only. */
     isFirefox?: boolean;
+    /** Target Safari only. */
     isSafari?: boolean;
+    /** Target Windows apps only. */
     isWP_WNS?: boolean;
+    /** Target Amazon devices only. */
     isAdm?: boolean;
+    /** Throttle rate per minute. */
     throttle_rate_per_minute?: number;
+    /** Enable frequency cap. */
     enable_frequency_cap?: boolean;
-}
+} & (
+    | {
+        /** Target users by their OneSignal ID (can be string or array) */
+        onesignal_id?: string | string[];
+        /** Target users by their external ID (can be string or array) */
+        external_id?: string | string[];
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+    }
+    | {
+        include_subscription_ids?: string[];
+        onesignal_id?: never;
+        external_id?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+    }
+    | {
+        included_segments?: string[];
+        excluded_segments?: string[];
+        onesignal_id?: never;
+        external_id?: never;
+        include_subscription_ids?: never;
+        filters?: never;
+    }
+    | {
+        filters?: Filter[];
+        onesignal_id?: never;
+        external_id?: never;
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+    }
+    | {
+        onesignal_id?: never;
+        external_id?: never;
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+    }
+);
 
 /**
  * @interface CreateEmailInput

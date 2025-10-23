@@ -24,10 +24,32 @@ export class OneSignalNotificationsService extends BaseOneSignalService {
         if (!notification.contents) {
             throw new Error('Contents are required for push notifications');
         }
-        const payload = {
+
+        const payload: any = {
             ...notification,
             app_id: this.options.appId
         };
+
+        // Handle simplified targeting
+        if (notification.onesignal_id || notification.external_id) {
+            payload.include_aliases = {};
+            if (notification.onesignal_id) {
+                payload.include_aliases.onesignal_id = Array.isArray(notification.onesignal_id)
+                    ? notification.onesignal_id
+                    : [notification.onesignal_id];
+            }
+            if (notification.external_id) {
+                payload.include_aliases.external_id = Array.isArray(notification.external_id)
+                    ? notification.external_id
+                    : [notification.external_id];
+            }
+            payload.target_channel = 'push';
+        }
+
+        // Remove the simplified fields from payload
+        delete payload.onesignal_id;
+        delete payload.external_id;
+
         return this.request('post', '/notifications?c=push', payload);
     }
 

@@ -97,7 +97,7 @@ export class NotificationService {
 ### Push Notifications
 
 ```typescript
-// Send a push notification
+// Send a push notification to all users
 const result = await this.oneSignal.sendPushNotification({
   contents: { en: 'Hello World!' },
   included_segments: ['All'],
@@ -112,12 +112,19 @@ const result = await this.oneSignal.sendPushNotification({
   ],
 });
 
-// Send to specific users
+// Send to specific users (simplified targeting)
 const result = await this.oneSignal.sendPushNotification({
   contents: { en: 'Personal message' },
-  include_aliases: {
-    external_id: ['user123', 'user456']
-  },
+  external_id: ['user123', 'user456'], // Direct external ID targeting
+  onesignal_id: 'onesignal_user_id',   // Direct OneSignal ID targeting
+});
+
+// Send to multiple users with mixed targeting
+const result = await this.oneSignal.sendPushNotification({
+  contents: { en: 'Group message' },
+  external_id: 'user123',              // Single user as string
+  onesignal_id: ['id1', 'id2', 'id3'], // Multiple users as array
+  headings: { en: 'Group Notification' },
 });
 ```
 
