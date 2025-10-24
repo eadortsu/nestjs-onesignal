@@ -791,7 +791,8 @@ export interface ViewNotificationsResponse extends NotificationStats {
  * @see https://documentation.onesignal.com/reference/cancel-notification
  */
 export interface CancelNotificationResponse {
-    success: boolean;
+    success?: boolean;
+    errors?: string[];
 }
 
 // =================================================================
