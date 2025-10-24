@@ -131,11 +131,38 @@ const result = await this.oneSignal.sendPushNotification({
 ### Email Notifications
 
 ```typescript
+// Send email to specific addresses
 const result = await this.oneSignal.sendEmailNotification({
   email_subject: 'Welcome!',
   email_body: 'Thank you for joining us.',
   email_to: ['user@example.com'],
   include_unsubscribed: false,
+});
+
+// Send email using a template (email_body optional)
+const result = await this.oneSignal.sendEmailNotification({
+  email_subject: 'Welcome!',
+  template_id: 'template-uuid-here',
+  email_to: ['user@example.com'],
+});
+
+// Send email to users by external_id or OneSignal ID (simplified targeting)
+const result = await this.oneSignal.sendEmailNotification({
+  email_subject: 'Personal Update',
+  email_body: 'Your account has been updated.',
+  external_id: ['user123', 'user456'], // Target by external ID
+  onesignal_id: 'onesignal_user_id',   // Target by OneSignal ID
+});
+
+// Send email with advanced options
+const result = await this.oneSignal.sendEmailNotification({
+  email_subject: 'Newsletter',
+  email_body: '<h1>Monthly Update</h1><p>Check out our latest news...</p>',
+  email_preheader: 'Your monthly newsletter is here',
+  email_from_name: 'My Company',
+  email_from_address: 'newsletter@mycompany.com',
+  included_segments: ['Subscribed Users'],
+  disable_email_click_tracking: false,
 });
 ```
 

@@ -132,10 +132,23 @@ describe('OneSignalNotificationsService', () => {
             await expect(service.sendEmailNotification(input)).rejects.toThrow('Email subject is required');
         });
 
-        it('should throw error if email body is missing', async () => {
+        it('should throw error if email body is missing and no template_id', async () => {
             const input = { email_subject: 'Test Subject' } as CreateEmailInput;
 
-            await expect(service.sendEmailNotification(input)).rejects.toThrow('Email body is required');
+            await expect(service.sendEmailNotification(input)).rejects.toThrow('Email body is required if template_id is not provided');
+        });
+
+        it('should not throw error if email body is missing but template_id is provided', async () => {
+            const mockResponse = { id: '123', recipients: 100 };
+            (httpService.post as jest.Mock).mockReturnValue(of({ data: mockResponse }));
+
+            const input: CreateEmailInput = {
+                email_subject: 'Test Subject',
+                template_id: 'template-123',
+            };
+
+            const result = await service.sendEmailNotification(input);
+            expect(result).toEqual(mockResponse);
         });
     });
 
