@@ -169,10 +169,36 @@ const result = await this.oneSignal.sendEmailNotification({
 ### SMS Notifications
 
 ```typescript
+// Send SMS to specific phone numbers
 const result = await this.oneSignal.sendSMSNotification({
   contents: { en: 'Your verification code is 123456' },
   sms_from: '+1234567890',
   include_phone_numbers: ['+0987654321'],
+});
+
+// Send SMS using a template (contents optional)
+const result = await this.oneSignal.sendSMSNotification({
+  template_id: 'template-uuid-here',
+  sms_from: '+1234567890',
+  include_phone_numbers: ['+0987654321'],
+});
+
+// Send SMS to users by external_id or OneSignal ID (simplified targeting)
+const result = await this.oneSignal.sendSMSNotification({
+  contents: { en: 'Personal SMS message' },
+  sms_from: '+1234567890',
+  external_id: ['user123', 'user456'], // Target by external ID
+  onesignal_id: 'onesignal_user_id',   // Target by OneSignal ID
+});
+
+// Send SMS with advanced options
+const result = await this.oneSignal.sendSMSNotification({
+  contents: { en: 'Hello! Check out our new feature.' },
+  sms_from: '+1234567890',
+  included_segments: ['Active Users'],
+  sms_media_urls: ['https://example.com/image.jpg'], // For MMS
+  name: 'Promotional SMS',
+  custom_data: { campaign: 'spring_promo' },
 });
 ```
 
