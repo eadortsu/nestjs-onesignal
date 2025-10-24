@@ -696,6 +696,7 @@ export interface NotificationResponse {
     converted?: number;
     errored?: number;
     failed?: number;
+    remaining?: number;
     filters?: any;
     included_segments?: any[];
     excluded_segments?: any[];
@@ -708,6 +709,7 @@ export interface NotificationResponse {
     delayed_option?: string;
     delivery_time_of_day?: string;
     throttle_rate_per_minute?: number;
+    fcap_status?: string;
     platform_delivery_stats?: Record<string, any>;
     outcomes?: Record<string, any>;
 }
