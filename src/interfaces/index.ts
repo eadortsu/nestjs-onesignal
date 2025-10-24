@@ -422,13 +422,12 @@ export type CreatePushNotificationInput = Scheduling & {
 );
 
 /**
- * @interface CreateEmailInput
  * @description Input for creating and sending an email.
  * @see https://documentation.onesignal.com/reference/create-email-notification
  */
-export interface CreateEmailInput extends Audience, Scheduling {
+export type CreateEmailInput = Scheduling & {
     email_subject: string;
-    email_body: string;
+    email_body?: string;
     target_channel?: 'email';
     email_to?: string[];
     email_preheader?: string;
@@ -441,7 +440,63 @@ export interface CreateEmailInput extends Audience, Scheduling {
     email_reply_to_address?: string;
     include_unsubscribed?: boolean;
     disable_email_click_tracking?: boolean;
-}
+} & (
+    | {
+        /** Target users by their OneSignal ID (can be string or array) */
+        onesignal_id?: string | string[];
+        /** Target users by their external ID (can be string or array) */
+        external_id?: string | string[];
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+        email_to?: never;
+    }
+    | {
+        /** Target users based on their external_id */
+        include_aliases?: {
+            external_id?: string[];
+            onesignal_id?: string[];
+        };
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+        email_to?: never;
+    }
+    | {
+        include_subscription_ids?: string[];
+        include_aliases?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+        email_to?: never;
+    }
+    | {
+        filters?: Filter[];
+        include_aliases?: never;
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        email_to?: never;
+    }
+    | {
+        email_to?: string[];
+        include_aliases?: never;
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+    }
+    | {
+        include_aliases?: never;
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+        email_to?: never;
+    }
+);
 
 /**
  * @interface CreateSMSInput

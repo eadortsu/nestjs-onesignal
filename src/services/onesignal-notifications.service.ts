@@ -57,14 +57,34 @@ export class OneSignalNotificationsService extends BaseOneSignalService {
         if (!email.email_subject) {
             throw new Error('Email subject is required');
         }
-        if (!email.email_body) {
-            throw new Error('Email body is required');
+        if (!email.template_id && !email.email_body) {
+            throw new Error('Email body is required if template_id is not provided');
         }
 
-        const payload = {
+        const payload: any = {
             ...email,
             app_id: this.options.appId
         };
+
+        // Handle simplified targeting
+        if ((email as any).onesignal_id || (email as any).external_id) {
+            payload.include_aliases = {};
+            if ((email as any).onesignal_id) {
+                payload.include_aliases.onesignal_id = Array.isArray((email as any).onesignal_id)
+                    ? (email as any).onesignal_id
+                    : [(email as any).onesignal_id];
+            }
+            if ((email as any).external_id) {
+                payload.include_aliases.external_id = Array.isArray((email as any).external_id)
+                    ? (email as any).external_id
+                    : [(email as any).external_id];
+            }
+            payload.target_channel = 'email';
+        }
+
+        // Remove the simplified fields from payload
+        delete payload.onesignal_id;
+        delete payload.external_id;
 
         return this.request('post', '/notifications?c=email', payload);
     }
