@@ -172,16 +172,23 @@ describe('OneSignalNotificationsService', () => {
             );
         });
 
-        it('should throw error if contents are missing', async () => {
+        it('should throw error if contents are missing and no template_id', async () => {
             const input = { sms_from: '+1234567890' } as CreateSMSInput;
 
-            await expect(service.sendSMSNotification(input)).rejects.toThrow('Contents are required for SMS notifications');
+            await expect(service.sendSMSNotification(input)).rejects.toThrow('Contents with en language are required if template_id is not provided');
         });
 
-        it('should throw error if sms_from is missing', async () => {
-            const input = { contents: { en: 'Test' } } as CreateSMSInput;
+        it('should not throw error if contents are missing but template_id is provided', async () => {
+            const mockResponse = { id: '123', recipients: 100 };
+            (httpService.post as jest.Mock).mockReturnValue(of({ data: mockResponse }));
 
-            await expect(service.sendSMSNotification(input)).rejects.toThrow('SMS from number is required');
+            const input: CreateSMSInput = {
+                sms_from: '+1234567890',
+                template_id: 'template-123',
+            };
+
+            const result = await service.sendSMSNotification(input);
+            expect(result).toEqual(mockResponse);
         });
     });
 

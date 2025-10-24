@@ -90,17 +90,37 @@ export class OneSignalNotificationsService extends BaseOneSignalService {
     }
 
     async sendSMSNotification(sms: CreateSMSInput): Promise<CreateNotificationResponse> {
-        if (!sms.contents) {
-            throw new Error('Contents are required for SMS notifications');
+        if (!sms.template_id && (!sms.contents || !sms.contents.en)) {
+            throw new Error('Contents with en language are required if template_id is not provided');
         }
         if (!sms.sms_from) {
             throw new Error('SMS from number is required');
         }
 
-        const payload = {
+        const payload: any = {
             ...sms,
             app_id: this.options.appId
         };
+
+        // Handle simplified targeting
+        if ((sms as any).onesignal_id || (sms as any).external_id) {
+            payload.include_aliases = {};
+            if ((sms as any).onesignal_id) {
+                payload.include_aliases.onesignal_id = Array.isArray((sms as any).onesignal_id)
+                    ? (sms as any).onesignal_id
+                    : [(sms as any).onesignal_id];
+            }
+            if ((sms as any).external_id) {
+                payload.include_aliases.external_id = Array.isArray((sms as any).external_id)
+                    ? (sms as any).external_id
+                    : [(sms as any).external_id];
+            }
+            payload.target_channel = 'sms';
+        }
+
+        // Remove the simplified fields from payload
+        delete payload.onesignal_id;
+        delete payload.external_id;
 
         return this.request('post', '/notifications?c=sms', payload);
     }

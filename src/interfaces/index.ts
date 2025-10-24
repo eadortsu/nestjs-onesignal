@@ -504,7 +504,7 @@ export type CreateEmailInput = Scheduling & {
  * @see https://documentation.onesignal.com/reference/create-sms-notification
  */
 export interface CreateSMSInput extends Audience, Scheduling {
-    contents: {
+    contents?: {
         en: string; // Default language content
         [lang: string]: string; // Additional languages
     };
@@ -515,7 +515,71 @@ export interface CreateSMSInput extends Audience, Scheduling {
     name?: string;
     template_id?: string;
     custom_data?: Record<string, any>;
-}
+} & (
+    | {
+        /** Target users by their OneSignal ID (can be string or array) */
+        onesignal_id?: string | string[];
+        /** Target users by their external ID (can be string or array) */
+        external_id?: string | string[];
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+        include_phone_numbers?: never;
+    }
+    | {
+        /** Target users based on their external_id */
+        include_aliases?: {
+            external_id?: string[];
+            onesignal_id?: string[];
+        };
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+        include_phone_numbers?: never;
+    }
+    | {
+        include_subscription_ids?: string[];
+        include_aliases?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+        include_phone_numbers?: never;
+    }
+    | {
+        included_segments?: string[];
+        excluded_segments?: string[];
+        include_aliases?: never;
+        include_subscription_ids?: never;
+        filters?: never;
+        include_phone_numbers?: never;
+    }
+    | {
+        filters?: Filter[];
+        include_aliases?: never;
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        include_phone_numbers?: never;
+    }
+    | {
+        include_phone_numbers?: string[];
+        include_aliases?: never;
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+    }
+    | {
+        include_aliases?: never;
+        include_subscription_ids?: never;
+        included_segments?: never;
+        excluded_segments?: never;
+        filters?: never;
+        include_phone_numbers?: never;
+    }
+);
 
 /**
  * @interface CreateNotificationResponse
